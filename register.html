@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Credixa</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Instrument+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #f5f3ef;
+      --surface: #ffffff;
+      --border: #e2ddd8;
+      --ink: #1a1714;
+      --gold: #b8966e;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Instrument Sans', sans-serif;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    /* container */
+    .wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 800px;
+      background: var(--surface);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    /* LEFT SIDE (branding) */
+    .left {
+      background: var(--ink);
+      color: #fff;
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .logo {
+      font-family: 'Syne';
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .tag {
+      font-size: 12px;
+      opacity: 0.5;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+    }
+
+    .highlight {
+      font-family: 'Syne';
+      font-size: 22px;
+      line-height: 1.4;
+    }
+
+    .gold {
+      color: var(--gold);
+    }
+
+    /* RIGHT SIDE (form) */
+    .right {
+      padding: 50px;
+    }
+
+    h2 {
+      font-family: 'Syne';
+      margin-bottom: 25px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background: #2e2b28;
+    }
+
+    p {
+      font-size: 13px;
+      margin-top: 15px;
+    }
+
+    a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrapper">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="logo">Credixa</div>
+      <div class="tag">PERSONAL BANKING</div>
+      <div class="highlight">
+        Secure your <span class="gold">money</span><br>
+        Manage your <span class="gold">future</span>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+      <h2>Create Account</h2>
+
+      <input type="text" id="reg-username" placeholder="Username">
+      <input type="password" id="reg-pass" placeholder="Password">
+
+      <button onclick="register()">Register</button>
+
+      <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+const SUPABASE_URL = "https://nvmdxiowkboawbwrqyay.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_PMyTux0TVPdUaAzV3fwDfg_rf8-306b";
+
+    const { createClient } = supabase;
+    const client = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function register() {
+      const username = document.getElementById('reg-username').value.trim();
+      const password = document.getElementById('reg-pass').value;
+
+      if (!username || !password) {
+        alert("Fill all fields");
+        return;
+      }
+
+      const { data, error } = await client
+        .from('users')
+        .insert([{ username, password }]);
+
+      if (error) {
+        if (error.code === '23505') {
+          alert("Username already exists");
+        } else {
+          alert(error.message);
+        }
+        return;
+      }
+
+      alert("Account created successfully!");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+
+</html>

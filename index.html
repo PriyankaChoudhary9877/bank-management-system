@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credixa</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f3ef;
+      --surface: #ffffff;
+      --border: #e2ddd8;
+      --ink: #1a1714;
+      --card: #fafaf8;
+      --border-dk: #c8c0b8;
+      --ink-2: #4a4540;
+      --ink-3: #8a8078;
+
+      --gold: #b8966e;
+      --gold-lt: #f0e8de;
+      --green: #2d6a4f;
+      --green-lt: #e8f4ee;
+      --red: #8b2e2e;
+      --red-lt: #f5eaea;
+      --radius: 4px;
+      --radius-lg: 8px;
+      --display: 'Syne', sans-serif;
+      --body: 'Instrument Sans', sans-serif;
+      --serif: 'Instrument Serif', serif;
+      --accent: #c9a96e;
+      --accent-dark: #a88955;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--body);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .app {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      background: var(--ink);
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .logo-block {
+      padding: 32px 28px 28px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .logo-name {
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-tagline {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.35);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .nav {
+      flex: 1;
+      padding: 20px 0;
+    }
+
+    .nav-section {
+      padding: 10px 28px 6px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.22);
+      font-weight: 600;
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 28px;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.45);
+      font-family: var(--body);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: color 0.2s, background 0.2s;
+      letter-spacing: -0.01em;
+      position: relative;
+    }
+
+    .nav-btn:hover {
+      color: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-btn.active {
+      color: #fff;
+      background: rgba(201, 169, 110, 0.15);
+
+
+    }
+
+    .nav-btn.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 18px;
+      background: var(--gold);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .nav-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+    }
+
+    .nav-btn.active .nav-icon {
+      background: rgba(184, 150, 110, 0.2);
+    }
+
+    .sidebar-footer {
+      padding: 20px 28px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .sidebar-footer-text {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.2);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Main ── */
+    .main {
+      padding: 48px 48px 64px;
+      overflow-y: auto;
+      background: var(--bg);
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── Page headers ── */
+    .page-header {
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-eyebrow {
+      font-size: 10.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .page-title {
+      font-family: var(--display);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .page-sub {
+      color: var(--ink-3);
+      font-size: 13.5px;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    /* ── Dashboard Stats ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border-dk);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 60px;
+      height: 60px;
+      background: var(--gold-lt);
+      border-radius: 50% 0 0 0;
+      opacity: 0.5;
+    }
+
+    .stat-label {
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-family: var(--display);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+    }
+
+    .stat-delta {
+      font-size: 12px;
+      color: var(--ink-3);
+      margin-top: 6px;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 20px;
+      border-top: 3px solid var(--accent);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-family: var(--display);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .card-count {
+      font-size: 11px;
+      color: var(--ink-3);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    /* ── Account list ── */
+    .acc-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 8px;
+      background: var(--card);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .acc-item:hover {
+      background: var(--surface);
+      border-color: var(--border-dk);
+    }
+
+    .acc-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .acc-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius);
+      background: var(--gold-lt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-right: 14px;
+      border: 1px solid rgba(184, 150, 110, 0.2);
+    }
+
+    .acc-info {
+      flex: 1;
+    }
+
+    .acc-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .acc-num {
+      font-size: 11.5px;
+      color: var(--ink-3);
+      margin-top: 2px;
+      font-family: var(--body);
+      letter-spacing: 0.04em;
+    }
+
+    .acc-bal {
+      font-family: var(--display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: -0.02em;
+    }
+
+    /* ── Forms ── */
+    .form-panel {
+      max-width: 480px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-2);
+      margin-bottom: 8px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 11px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.2);
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      height: 50px;
+      /* bigger height */
+      padding: 12px 16px;
+      /* proper spacing inside */
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+
+      /* 🔥 Important for long numbers */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    input::placeholder {
+      color: var(--ink-3);
+    }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8078' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .input-note {
+      font-size: 11.5px;
+      color: var(--ink-3);
+      margin-top: 6px;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 11px 22px;
+      border-radius: var(--radius);
+      font-family: var(--body);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      letter-spacing: -0.01em;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: var(--accent-dark);
+    }
+
+    #nav-logout {
+      color: #e74c3c;
+    }
+
+    #nav-logout:hover {
+      background: rgba(231, 76, 60, 0.1);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #2e2b28;
+      box-shadow: 0 4px 12px rgba(26, 23, 20, 0.18);
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-green:hover {
+      background: #235a41;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.22);
+    }
+
+    .btn-red {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .btn-red:hover {
+      background: #762626;
+      box-shadow: 0 4px 12px rgba(139, 46, 46, 0.2);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-dk);
+      color: var(--ink-2);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg);
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    /* ── Transaction list ── */
+    .tx-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tx-item:last-child {
+      border-bottom: none;
+    }
+
+    .tx-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .tx-dot.dep {
+      background: var(--green-lt);
+    }
+
+    .tx-dot.with {
+      background: var(--red-lt);
+    }
+
+    .tx-dot.open {
+      background: var(--gold-lt);
+    }
+
+    .tx-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tx-description {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tx-meta {
+      font-size: 11.5px;
+      color: var(--ink-3);
+      margin-top: 2px;
+    }
+
+    .tx-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .tx-amount {
+      font-family: var(--display);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .tx-amount.dep {
+      color: var(--green);
+    }
+
+    .tx-amount.with {
+      color: var(--red);
+    }
+
+    .tx-amount.open {
+      color: var(--gold);
+    }
+
+    .tx-badge {
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 20px;
+      margin-top: 4px;
+      display: inline-block;
+    }
+
+    .tx-badge.dep {
+      background: var(--green-lt);
+      color: var(--green);
+    }
+
+    .tx-badge.with {
+      background: var(--red-lt);
+      color: var(--red);
+    }
+
+    .tx-badge.open {
+      background: var(--gold-lt);
+      color: #9a7040;
+    }
+
+    /* ── Balance card ── */
+    .balance-card {
+      background: var(--ink);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-card::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      background: rgba(184, 150, 110, 0.12);
+      border-radius: 50%;
+    }
+
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: 60px;
+      width: 200px;
+      height: 200px;
+      background: rgba(184, 150, 110, 0.06);
+      border-radius: 50%;
+    }
+
+    .balance {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .balance-card {
+      background: linear-gradient(135deg, #1a1714, #2c221a);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-amount {
+      transition: all 0.3s ease;
+    }
+
+    .bc-label {
+      font-size: 10.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 600;
+    }
+
+    .bc-name {
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 700;
+      margin: 8px 0 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .bc-row {
+      display: flex;
+      gap: 40px;
+    }
+
+    .bc-field {}
+
+    .bc-field-label {
+      font-size: 10.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+      margin-bottom: 4px;
+    }
+
+    .bc-field-value {
+      font-family: var(--display);
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 0.04em;
+    }
+
+    .bc-amount {
+      font-size: 32px;
+      /* bigger & bold */
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      /* clean spacing */
+      text-align: right;
+      /* aligns nicely */
+      margin-top: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      /* modern number style */
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bc-amount span {
+      font-size: 20px;
+      margin-right: 4px;
+      opacity: 0.8;
+    }
+
+    /* ── Dividers ── */
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    /* ── Empty ── */
+    .empty {
+      text-align: center;
+      padding: 48px 32px;
+      color: var(--ink-3);
+    }
+
+    .empty-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+
+    .empty-text {
+      font-size: 13.5px;
+    }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      padding: 13px 18px;
+      border-radius: var(--radius-lg);
+      font-size: 13.5px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: 320px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #toast.ok {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    #toast.err {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .toast-icon {
+      font-size: 14px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        height: auto;
+        flex-direction: row;
+        overflow-x: auto;
+        position: static;
+      }
+
+      .logo-block {
+        display: none;
+      }
+
+      .nav {
+        display: flex;
+        padding: 8px;
+      }
+
+      .nav-section {
+        display: none;
+      }
+
+      .nav-btn {
+        padding: 8px 14px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .nav-btn.active::before {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 3px;
+        border-radius: 0 0 2px 2px;
+      }
+
+      .main {
+        padding: 24px 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .sidebar-footer {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo-block">
+        <div class="logo-name">Credixa</div>
+        <div class="logo-tagline">Personal Banking</div>
+      </div>
+      <nav class="nav">
+        <div class="nav-section">Overview</div>
+        <button class="nav-btn active" onclick="showPage('dashboard')" id="nav-dashboard">
+          <span class="nav-icon">▦</span> Dashboard
+        </button>
+        <div class="nav-section">Actions</div>
+        <button class="nav-btn" onclick="showPage('create')" id="nav-create">
+          <span class="nav-icon">+</span> New Account
+        </button>
+        <button class="nav-btn" onclick="showPage('deposit')" id="nav-deposit">
+          <span class="nav-icon">↑</span> Deposit
+        </button>
+        <button class="nav-btn" onclick="showPage('withdraw')" id="nav-withdraw">
+          <span class="nav-icon">↓</span> Withdraw
+        </button>
+        <div class="nav-section">Reports</div>
+        <button class="nav-btn" onclick="showPage('balance')" id="nav-balance">
+          <span class="nav-icon">◎</span> Balance
+        </button>
+        <button class="nav-btn" onclick="showPage('history')" id="nav-history">
+          <span class="nav-icon">≡</span> Transactions
+        </button>
+        <button class="nav-btn" onclick="logout()" id="nav-logout">
+          <span class="nav-icon">⎋</span> Logout
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-text">Credixa</div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Dashboard -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div class="page-eyebrow">Overview</div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-sub">Real-time summary of all accounts and activity.</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Accounts</div>
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-delta">Active accounts</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Balance</div>
+            <div class="stat-value" id="stat-balance">₹0</div>
+            <div class="stat-delta">Across all accounts</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Transactions</div>
+            <div class="stat-value" id="stat-tx">0</div>
+            <div class="stat-delta">All time</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Accounts</div>
+
+          </div>
+          <div id="acc-list">
+            <div class="empty">
+              <div class="empty-icon">🏦</div>
+              <div class="empty-text">No accounts yet. Create one to get started.</div>
+            </div>
+          </div>
+          <button class="btn" style="margin-top:16px;" onclick="showPage('create')">+ Create Account</button>
+        </div>
+      </div>
+
+      <!-- Create Account -->
+      <div class="page" id="page-create">
+        <div class="page-header">
+          <div class="page-eyebrow">Accounts</div>
+          <div class="page-title">Open New Account</div>
+          <div class="page-sub">Provide account holder details and an opening deposit.</div>
+        </div>
+        <div class="card form-panel">
+          <div class="form-group">
+            <label>Account Holder Name</label>
+            <input type="text" id="new-name" placeholder="e.g. Ramesh Kumar" />
+          </div>
+          <div class="form-group">
+            <label>Opening Balance (₹)</label>
+            <input type="number" id="new-balance" placeholder="0.00" min="0" />
+            <div class="input-note">Minimum opening balance: ₹0</div>
+          </div>
+          <button class="btn btn-primary" onclick="createAccount()">Open Account →</button>
+        </div>
+      </div>
+
+      <!-- Deposit -->
+      <div class="page" id="page-deposit">
+        <div class="page-header">
+          <div class="page-eyebrow">Transactions</div>
+          <div class="page-title">Deposit Funds</div>
+          <div class="page-sub">Add money to an existing account.</div>
+        </div>
+        <div class="card form-panel">
+          <div class="form-group">
+            <label>Select Account</label>
+            <select id="dep-acc"></select>
+          </div>
+          <div class="form-group">
+            <label>Amount (₹)</label>
+            <input type="number" id="dep-amount" placeholder="0.00" min="1" />
+          </div>
+          <button class="btn btn-green" onclick="deposit()">Confirm Deposit →</button>
+        </div>
+      </div>
+
+      <!-- Withdraw -->
+      <div class="page" id="page-withdraw">
+        <div class="page-header">
+          <div class="page-eyebrow">Transactions</div>
+          <div class="page-title">Withdraw Funds</div>
+          <div class="page-sub">Remove money from an existing account.</div>
+        </div>
+        <div class="card form-panel">
+          <div class="form-group">
+            <label>Select Account</label>
+            <select id="with-acc"></select>
+          </div>
+          <div class="form-group">
+            <label>Amount (₹)</label>
+            <input type="number" id="with-amount" placeholder="0.00" min="1" />
+          </div>
+          <button class="btn btn-red" onclick="withdraw()">Confirm Withdrawal →</button>
+        </div>
+      </div>
+
+      <!-- Balance -->
+      <div class="page" id="page-balance">
+        <div class="page-header">
+          <div class="page-eyebrow">Reports</div>
+          <div class="page-title">Check Balance</div>
+          <div class="page-sub">View the current balance for any account.</div>
+        </div>
+
+        <div class="form-panel">
+          <div class="card">
+            <div class="form-group" style="margin-bottom:0">
+              <label>Select Account</label>
+              <select id="bal-acc" onchange="showBalance()"></select>
+            </div>
+
+            <!-- ✅ ONLY ONE RESULT DIV -->
+            <div id="bal-result"></div>
+          </div>
+
+          <div style="margin-top:16px;">
+            <button class="btn btn-red" onclick="deleteAccount()">Delete Account</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div class="page" id="page-history">
+        <div class="page-header">
+          <div class="page-eyebrow">Reports</div>
+          <div class="page-title">Transaction History</div>
+          <div class="page-sub">A full log of all transactions across all accounts.</div>
+        </div>
+        <div class="card" style="max-width:600px">
+          <div class="form-group" style="margin-bottom:20px">
+            <label>Filter by Account</label>
+            <select id="hist-filter" onchange="renderHistory()">
+              <option value="">All Accounts</option>
+            </select>
+          </div>
+          <div id="tx-list">
+            <div class="empty">
+              <div class="empty-icon">🧾</div>
+              <div class="empty-text">No transactions recorded yet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast"><span class="toast-icon" id="toast-icon"></span><span id="toast-msg"></span></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <script>
+    let currentUser = null;
+
+    /* ================== CONFIG ================== */
+    const SUPABASE_URL = "https://nvmdxiowkboawbwrqyay.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_PMyTux0TVPdUaAzV3fwDfg_rf8-306b";
+
+    // ✅ FIXED supabase init
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let accounts = {};
+    let transactions = [];
+
+    /* ================== AUTH CHECK ================== */
+    document.addEventListener("DOMContentLoaded", async () => {
+      await checkAuth();
+
+      if (!currentUser) {
+        console.log("No user found");
+        return;
+      }
+
+      await loadAccounts();
+      await loadTransactions();
+    });
+    window.onerror = function (msg, url, line) {
+      alert("Error: " + msg + " Line: " + line);
+    };
+
+    /* ================== AUTH ================== */
+    async function checkAuth() {
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      currentUser = user;
+    }
+
+    /* ================== LOAD DATA ================== */
+    async function loadAccounts() {
+      const { data, error } = await supabaseClient
+        .from('accounts')
+        .select('*')
+        .eq('user_id', currentUser.id);
+
+      if (error) {
+        console.log("Accounts error:", error);
+        return;
+      }
+
+      accounts = {};
+      (data || []).forEach(a => accounts[a.accnum] = a);
+
+      renderDashboard();
+      populateSelects();
+    }
+
+    async function loadTransactions() {
+      const { data, error } = await supabaseClient
+        .from('transactions')
+        .select('*')
+        .eq('user_id', currentUser.id);
+
+      if (error) {
+        console.log("Transactions error:", error);
+        return;
+      }
+
+      transactions = data || [];
+      renderHistory();
+    }
+
+    /* ================== CREATE ACCOUNT ================== */
+    async function createAccount() {
+      const name = document.getElementById('new-name').value.trim();
+      const balance = parseFloat(document.getElementById('new-balance').value);
+
+      if (!name) return toast('Enter name', 'err');
+      if (isNaN(balance) || balance < 0) return toast('Invalid balance', 'err');
+
+      const { data, error } = await supabaseClient
+        .from('accounts')
+        .insert([{ name, balance, user_id: currentUser.id }])
+        .select();
+
+      if (error) return toast(error.message, 'err');
+
+      toast(`Account created`, 'ok');
+
+      document.getElementById('new-name').value = '';
+      document.getElementById('new-balance').value = '';
+
+      await loadAccounts();
+      showPage('dashboard');
+    }
+
+    /* ================== DEPOSIT ================== */
+    async function deposit() {
+      const accnum = document.getElementById('dep-acc').value;
+      const amount = parseFloat(document.getElementById('dep-amount').value);
+
+      if (!accnum) return toast('Select account', 'err');
+      if (amount <= 0) return toast('Invalid amount', 'err');
+
+      accounts[accnum].balance = Number(accounts[accnum].balance) + Number(amount);
+
+      await addTransaction(accnum, 'Deposit', amount, 'dep');
+
+      await supabaseClient
+        .from('accounts')
+        .update({ balance: accounts[accnum].balance })
+        .eq('accnum', accnum);
+
+      renderDashboard();
+      populateSelects();
+      toast('Deposited', 'ok');
+    }
+
+    /* ================== WITHDRAW ================== */
+    async function withdraw() {
+      const accnum = document.getElementById('with-acc').value;
+      const amount = parseFloat(document.getElementById('with-amount').value);
+
+      if (!accnum) return toast('Select account', 'err');
+      if (amount <= 0) return toast('Invalid amount', 'err');
+      if (accounts[accnum].balanceamount) return toast('Insufficient funds', 'err');
+
+      accounts[accnum].balance = Number(accounts[accnum].balance) - Number(amount);
+
+      await addTransaction(accnum, 'Withdrawal', amount, 'with');
+
+      await supabaseClient
+        .from('accounts')
+        .update({ balance: accounts[accnum].balance })
+        .eq('accnum', accnum);
+
+      renderDashboard();
+      populateSelects();
+      toast('Withdrawn', 'ok');
+    }
+
+    /* ================== DELETE ================== */
+    async function deleteAccount() {
+      const accnum = document.getElementById('bal-acc').value;
+
+      if (!accnum) return toast('Select account', 'err');
+      if (!confirm("Delete account?")) return;
+
+      await supabaseClient.from('accounts').delete().eq('accnum', accnum);
+
+      delete accounts[accnum];
+      transactions = transactions.filter(t => t.accnum !== accnum);
+
+      await loadAccounts();
+      populateHistoryFilter();
+      showPage('dashboard');
+
+      toast('Account deleted', 'ok');
+    }
+
+    /* ================== TRANSACTION ================== */
+    async function addTransaction(accnum, description, amount, type) {
+      const tx = {
+        accnum,
+        description,
+        amount,
+        type,
+        date: new Date().toLocaleString('en-IN'),
+        user_id: currentUser.id
+      };
+
+      const { data, error } = await supabaseClient
+        .from('transactions')
+        .insert([tx])
+        .select();
+
+      if (error) {
+        console.log(error);
+        return;
+      }
+
+      transactions.unshift(data[0] || tx);
+      renderHistory();
+    }
+
+    /* ================== UI ================== */
+    function showPage(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+      document.getElementById('page-' + name).classList.add('active');
+      document.getElementById('nav-' + name).classList.add('active');
+
+      if (name === 'dashboard') renderDashboard();
+      if (name === 'deposit' || name === 'withdraw') populateSelects();
+      if (name === 'balance') { populateSelects(); showBalance(); }
+      if (name === 'history') { populateHistoryFilter(); renderHistory(); }
+    }
+
+    /* ================== BALANCE ================== */
+    function showBalance() {
+      const accnum = document.getElementById('bal-acc').value;
+      const div = document.getElementById('bal-result');
+
+      if (!accnum || !accounts[accnum]) {
+        div.innerHTML = "<div class='empty'>Select account</div>";
+        return;
+      }
+
+      const acc = accounts[accnum];
+
+      div.innerHTML = `
+    <div class="balance-card">
+      <div class="bc-name">${acc.name}</div>
+      <div class="bc-amount">₹${fmt(acc.balance)}</div>
+    </div>
+  `;
+    }
+    function register() {
+      console.log("register clicked");
+    }
+
+    /* ================== DASHBOARD ================== */
+    function renderDashboard() {
+      const list = Object.values(accounts);
+      const total = list.reduce((s, a) => s + a.balance, 0);
+
+      document.getElementById('stat-total').textContent = list.length;
+      document.getElementById('stat-balance').textContent = '₹' + fmt(total);
+      document.getElementById('stat-tx').textContent = transactions.length;
+
+      document.getElementById('acc-list').innerHTML =
+        list.length
+          ? list.map(a => `
+        <div class="acc-item">
+          <div>${a.name}</div>
+          <div>₹${fmt(a.balance)}</div>
+        </div>`).join('')
+          : `<div class="empty">No accounts</div>`;
+    }
+
+    /* ================== HISTORY ================== */
+    function renderHistory() {
+      const filter = document.getElementById('hist-filter').value;
+
+      let data = transactions;
+
+      if (filter) {
+        data = data.filter(t => String(t.accnum) === String(filter));
+      }
+
+      document.getElementById('tx-list').innerHTML =
+        data.length
+          ? data.map(t => `
+        <div class="tx-item">
+          <div class="tx-info">
+            <div class="tx-description">${t.description}</div>
+            <div class="tx-meta">${t.date || ''}</div>
+          </div>
+          <div class="tx-right">
+            <div class="tx-amount ${t.type}">
+              ₹${fmt(t.amount)}
+            </div>
+          </div>
+        </div>
+      `).join('')
+          : `<div class="empty">No transactions found</div>`;
+    }
+
+    /* ================== SELECTS ================== */
+    function populateSelects() {
+      const ids = ['dep-acc', 'with-acc', 'bal-acc'];
+
+      ids.forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+
+        sel.innerHTML =
+          '<option value="">Select</option>' +
+          Object.values(accounts)
+            .map(a => `<option value="${a.accnum}">${a.name}</option>`)
+            .join('');
+      });
+    }
+
+    function populateHistoryFilter() {
+      const sel = document.getElementById('hist-filter');
+
+      sel.innerHTML =
+        '<option value="">All</option>' +
+        Object.values(accounts)
+          .map(a => `<option value="${a.accnum}">${a.name}</option>`)
+          .join('');
+    }
+
+    /* ================== UTILS ================== */
+    function fmt(n) {
+      return Number(n || 0).toLocaleString('en-IN', {
+        currency: 'INR',
+        maximumFractionDigits: 2
+      });
+    }
+
+    function toast(msg) {
+      alert(msg);
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+
+</html>
