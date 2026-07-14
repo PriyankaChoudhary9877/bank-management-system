@@ -2,7 +2,7 @@
 
 <br />
 
-<img src="public/Dashboard.png" alt="Credixa" width="100%" />
+<img src="public/Login Page.png" alt="Credixa" width="100%" />
 
 <br />
 <br />
